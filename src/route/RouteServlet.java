@@ -11,15 +11,18 @@ import javax.servlet.http.*;
 import javax.persistence.*;
 import com.google.gson.*;
 
+import tripShareObjects.Route;
+
 @WebServlet("/RouteServlet")
 public class RouteServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
     Gson gson = new Gson();
+    
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
-    		throws ServletException, IOException {    	
-    	// Obtain a database connection:
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    		throws ServletException, IOException {   
+    	 // Obtain a database connection:
         EntityManagerFactory emf =
            (EntityManagerFactory)getServletContext().getAttribute("emf");
         EntityManager em = emf.createEntityManager();
@@ -27,17 +30,21 @@ public class RouteServlet extends HttpServlet {
         try 
         {  	
         	// get the user id from the request
-        	int userID = Integer.parseInt(req.getParameter("m_userID"));
+        	int userID = Integer.parseInt(request.getParameter("m_userID"));
         	// read the routes from the DB        
         	 List<Route> routeListToSend = em.createQuery(
                      "SELECT r FROM Route r WHERE r.m_userID = :userID", Route.class).setParameter("userID", userID).getResultList();
     		String routeListInJson = gson.toJson(routeListToSend);
-    		PrintWriter out = resp.getWriter();
-    		resp.setContentType("application/json");
-    		resp.setCharacterEncoding("UTF-8");
+    		PrintWriter out = response.getWriter();
+    		response.setContentType("application/json");
+    		response.setCharacterEncoding("UTF-8");
     		out.print(routeListInJson);
     		out.flush();
         }
+        catch (Exception e) 
+    	{
+			response.sendError(404);
+		}
         finally 
         {
             // Close the database connection:
@@ -51,8 +58,7 @@ public class RouteServlet extends HttpServlet {
     protected void doPost(
         HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        // Obtain a database connection:
+    	 // Obtain a database connection:
         EntityManagerFactory emf =
            (EntityManagerFactory)getServletContext().getAttribute("emf");
         EntityManager em = emf.createEntityManager();
@@ -61,14 +67,18 @@ public class RouteServlet extends HttpServlet {
     	{
     		// read the object from the request
     		BufferedReader reader = request.getReader();
-    		Route m_RouteToAddToDB = gson.fromJson(reader, Route.class);
+    		Route routeToAddToDB = gson.fromJson(reader, Route.class);
             
     		// insert the object into the DB
     		em.getTransaction().begin();
-    		em.persist(m_RouteToAddToDB);
+    		em.persist(routeToAddToDB);
     		em.getTransaction().commit();        
     		
     	}  
+    	catch (Exception e) 
+    	{
+			response.sendError(404);
+		}
         finally 
         {
             // Close the database connection:
@@ -76,5 +86,39 @@ public class RouteServlet extends HttpServlet {
                 em.getTransaction().rollback();
             em.close();
         }
+    }
+    
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
+    		throws ServletException, IOException {
+    	
+    	 // Obtain a database connection:
+        EntityManagerFactory emf =
+           (EntityManagerFactory)getServletContext().getAttribute("emf");
+        EntityManager em = emf.createEntityManager();
+        
+    	try
+    	{
+        	// get the route id from the request
+        	long routeID = Long.parseLong(request.getParameter("m_routeID"));
+        	
+        	Route routeToDelete = em.find(Route.class, routeID);
+
+        	  em.getTransaction().begin();
+        	  em.remove(routeToDelete);
+        	  em.getTransaction().commit();
+    	}
+    	catch(Exception e)
+    	{
+			response.sendError(404);	
+    	}
+    	finally
+    	{
+    		// Close the database connection:
+            if (em.getTransaction().isActive())
+                em.getTransaction().rollback();
+            em.close();
+		}
+    	
     }
 }

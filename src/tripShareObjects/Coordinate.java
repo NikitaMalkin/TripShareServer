@@ -1,4 +1,4 @@
-package route;
+package tripShareObjects;
 
 import java.io.Serializable;
 import javax.persistence.*;
@@ -11,6 +11,7 @@ public class Coordinate implements Serializable{
 	private long m_ID;
 	private String m_latitude;
 	private String m_longitude;
+	private Addition m_additionToCoordinate;
 
 	public Coordinate() {
 	    }
@@ -28,6 +29,17 @@ public class Coordinate implements Serializable{
 	public String getLongitude()
 	{
 		return m_longitude;
+	}
+	
+	public Addition getCoordinateAddition()
+	{
+		return m_additionToCoordinate;
+	}
+	
+	public void setAddition(Addition i_additionToSet)
+	{
+		m_additionToCoordinate.setImageDescription(i_additionToSet.getImageDescription());
+		// TODO finish this function.
 	}
 	
 	@Override
