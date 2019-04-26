@@ -13,7 +13,6 @@ public class Route implements Serializable{
 	private long m_ID;
 	private int m_userID;
 	private String m_routeName;
-	private String m_routeDescription;
 	@OneToMany(cascade=CascadeType.PERSIST)
 	private List<Coordinate> m_routeCoordinates= new ArrayList<>(); 
 	
@@ -32,8 +31,4 @@ public class Route implements Serializable{
 	public void setRouteCoordinates(List<Coordinate> i_routeCoordinates) { m_routeCoordinates = i_routeCoordinates; }
 	
 	public void setRouteName(String i_routeName) { m_routeName = new String(i_routeName); }
-	
-    public String getRouteDescription() { return m_routeDescription; }
-
-    public void setRouteDescription(String i_routeDescription) {  m_routeDescription = new String(i_routeDescription); }
 }

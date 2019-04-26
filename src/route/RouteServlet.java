@@ -74,6 +74,10 @@ public class RouteServlet extends HttpServlet {
     		em.persist(routeToAddToDB);
     		em.getTransaction().commit();        
     		
+    		// set the response with the route generated ID
+    		PrintWriter writer = response.getWriter();
+    		String routeIDToSendBack = String.valueOf(routeToAddToDB.getRouteID());
+    		writer.print(routeIDToSendBack);		
     	}  
     	catch (Exception e) 
     	{
