@@ -38,7 +38,6 @@ public class Coordinate implements Serializable{
 	
 	public void setAddition(Addition i_additionToSet)
 	{
-		m_additionToCoordinate.setImageDescription(i_additionToSet.getImageDescription());
 		// TODO finish this function.
 	}
 	

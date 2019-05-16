@@ -10,9 +10,14 @@ public class Addition implements Serializable{
 	
 	@Id @GeneratedValue
 	private long m_ID;
-	private String m_imageDescription;
-	// private image; // TODO
-	
-	public String getImageDescription() { return m_imageDescription; }
-	public void setImageDescription(String i_imageDescription) { m_imageDescription= new String(i_imageDescription);}
+    private String m_note;
+    private String m_imageString;
+
+    public String getNote() { return m_note; }
+
+    public void setNote(String i_imageDescription) { m_note = i_imageDescription; }
+
+    public String getImageString() { return m_imageString; }
+
+    public void setImageString(String i_imageString){ m_imageString = i_imageString; }
 }
