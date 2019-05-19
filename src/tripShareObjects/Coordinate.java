@@ -11,15 +11,21 @@ public class Coordinate implements Serializable{
 	private long m_ID;
 	private String m_latitude;
 	private String m_longitude;
-	private Addition m_additionToCoordinate;
+	@OneToOne(cascade=CascadeType.PERSIST)
+	private Addition m_addition;
 
-	public Coordinate() {
-	    }
+	public Coordinate() { }
 
-	Coordinate(String i_Latitude, String i_Longitude) {
+	Coordinate(String i_Latitude, String i_Longitude) 
+	{
 	        this.m_latitude = new String(i_Latitude);
 	        this.m_longitude = new String(i_Longitude);
-	    }
+	}
+	
+	public long getID()
+	{
+		return m_ID;
+	}
 	
 	public String getLatitude()
 	{
@@ -33,12 +39,21 @@ public class Coordinate implements Serializable{
 	
 	public Addition getCoordinateAddition()
 	{
-		return m_additionToCoordinate;
+		return m_addition;
 	}
 	
 	public void setAddition(Addition i_additionToSet)
 	{
-		// TODO finish this function.
+		if(m_addition == null)
+			m_addition = new Addition();
+		
+		m_addition.setImageString(i_additionToSet.getImageString());
+		m_addition.setNote(i_additionToSet.getNote());
+	}
+	
+	public Addition getAddition()
+	{
+		return m_addition;
 	}
 	
 	@Override

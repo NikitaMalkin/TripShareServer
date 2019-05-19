@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import tripShareObjects.Route;
 
-@WebServlet("/RouteUpdateServlet")
-public class RouteUpdateServlet extends HttpServlet {
+@WebServlet("/RouteNameUpdateServlet")
+public class RouteNameUpdateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
