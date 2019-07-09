@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,9 +32,12 @@ public class PostServlet extends HttpServlet {
         {  	
         	// get the user id from the request
         	int userID = Integer.parseInt(request.getParameter("m_userID"));
-        	// read the routes from the DB        
-        	 List<Post> postListToSend = em.createQuery(
-                     "SELECT p FROM Post p WHERE p.m_userID = :userID", Post.class).setParameter("userID", userID).getResultList();
+        	int m_firstPositionToRetrieve = Integer.parseInt(request.getParameter("m_firstPositionToRetrieve"));
+        	// read the posts from the DB  
+        	// TODO: change it so each time other post would be retrieved.
+        	TypedQuery<Post> query = em.createQuery(
+                    "SELECT p FROM Post p WHERE p.m_userID = :userID", Post.class).setParameter("userID", userID).setFirstResult(m_firstPositionToRetrieve).setMaxResults(5);
+        	 List<Post> postListToSend = query.getResultList();
     		String postListInJson = gson.toJson(postListToSend);
     		PrintWriter out = response.getWriter();
     		response.setContentType("application/json");
