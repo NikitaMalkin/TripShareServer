@@ -43,7 +43,7 @@ public class RouteServlet extends HttpServlet {
         }
         catch (Exception e) 
     	{
-			response.sendError(404);
+			response.sendError(500, e.getMessage());
 		}
         finally 
         {
@@ -81,7 +81,7 @@ public class RouteServlet extends HttpServlet {
     	}  
     	catch (Exception e) 
     	{
-			response.sendError(404);
+			response.sendError(500, e.toString());
 		}
         finally 
         {
@@ -114,7 +114,7 @@ public class RouteServlet extends HttpServlet {
     	}
     	catch(Exception e)
     	{
-			response.sendError(404);	
+			response.sendError(500, e.toString());
     	}
     	finally
     	{
