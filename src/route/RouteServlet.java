@@ -30,7 +30,7 @@ public class RouteServlet extends HttpServlet {
         try 
         {  	
         	// get the user id from the request
-        	int userID = Integer.parseInt(request.getParameter("m_userID"));
+        	Long userID = Long.parseLong(request.getParameter("m_userID"));
         	// read the routes from the DB        
         	 List<Route> routeListToSend = em.createQuery(
                      "SELECT r FROM Route r WHERE r.m_userID = :userID", Route.class).setParameter("userID", userID).getResultList();

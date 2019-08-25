@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import tripShareObjects.Post;
 
-@WebServlet("/PostServlet")
-public class PostServlet extends HttpServlet {
+@WebServlet("/ProfilePostServlet")
+public class ProfilePostsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	 Gson gson = new Gson();
 	
@@ -33,8 +33,8 @@ public class PostServlet extends HttpServlet {
         	// get the user id from the request
         	int userID = Integer.parseInt(request.getParameter("m_userID"));
         	int m_firstPositionToRetrieve = Integer.parseInt(request.getParameter("m_firstPositionToRetrieve"));
+        	
         	// read the posts from the DB  
-        	// TODO: change it so each time other post would be retrieved.
         	TypedQuery<Post> query = em.createQuery(
                     "SELECT p FROM Post p WHERE p.m_userID = :userID", Post.class).setParameter("userID", userID).setFirstResult(m_firstPositionToRetrieve).setMaxResults(5);
         	 List<Post> postListToSend = query.getResultList();
@@ -55,8 +55,7 @@ public class PostServlet extends HttpServlet {
             if (em.getTransaction().isActive())
                 em.getTransaction().rollback();
             em.close();
-        }
-        
+        } 
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -71,13 +70,17 @@ public class PostServlet extends HttpServlet {
     	{
     		// read the object from the request
     		BufferedReader reader = request.getReader();
-    		Post m_PostToAddToDB = new Gson().fromJson(reader, Post.class);
+    		Post m_PostToAddToDB = gson.fromJson(reader, Post.class);
             
     		// insert the object into the DB
     		em.getTransaction().begin();
     		em.persist(m_PostToAddToDB);
     		em.getTransaction().commit();        
     		
+    		// set the response with the route generated ID
+    		PrintWriter writer = response.getWriter();
+    		String postIDToSendBack = String.valueOf(m_PostToAddToDB.getID());
+    		writer.print(postIDToSendBack);
     	}  
     	catch (Exception e) 
     	{

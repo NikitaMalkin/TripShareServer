@@ -19,7 +19,8 @@ import com.google.gson.Gson;
 import tripShareObjects.User;
 
 @WebServlet("/UserServlet")
-public class UserServlet extends HttpServlet {
+public class UserServlet extends HttpServlet 
+{
 	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
@@ -77,5 +78,4 @@ public class UserServlet extends HttpServlet {
             em.close();
         }
 	}
-
 }
