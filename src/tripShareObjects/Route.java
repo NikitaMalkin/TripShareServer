@@ -11,15 +11,16 @@ public class Route implements Serializable{
 	
 	@Id @GeneratedValue
 	private long m_ID;
-	private int m_userID;
+	private long m_userID;
 	private String m_routeName;
 	private String m_createdDate;
+    private Boolean m_isDeletedButUsedInPost;
 	@OneToMany(cascade=CascadeType.PERSIST)
 	private List<Coordinate> m_routeCoordinates= new ArrayList<>(); 
 	
-	public Route(int i_userID) { m_userID = i_userID; }
+	public Route(int i_userID) { m_userID = i_userID; m_isDeletedButUsedInPost = false;}
 	
-	public int getUserID() { return m_userID; }
+	public long getUserID() { return m_userID; }
 	
 	public long getRouteID() { return m_ID; }
 	
@@ -36,4 +37,8 @@ public class Route implements Serializable{
 	public String getCreatedDate() { return m_createdDate; }
 	
 	public void setCreatedDate(String i_createdDate) { m_createdDate = i_createdDate; }
+
+	 public Boolean getIsDeletedButUsedInPost() { return m_isDeletedButUsedInPost; }
+
+	 public void setIsDeletedButUsedInPost(Boolean i_isDeletedButUsedInPost) { m_isDeletedButUsedInPost = i_isDeletedButUsedInPost; }
 }

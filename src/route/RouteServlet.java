@@ -11,6 +11,7 @@ import javax.servlet.http.*;
 import javax.persistence.*;
 import com.google.gson.*;
 
+import tripShareObjects.Post;
 import tripShareObjects.Route;
 
 @WebServlet("/RouteServlet")
@@ -34,6 +35,14 @@ public class RouteServlet extends HttpServlet {
         	// read the routes from the DB        
         	 List<Route> routeListToSend = em.createQuery(
                      "SELECT r FROM Route r WHERE r.m_userID = :userID", Route.class).setParameter("userID", userID).getResultList();
+        	 
+        	 //remove any route which have been deleted but are used in posts
+        	 for(int i=0; i < routeListToSend.size(); i++)
+        	 {
+        		 if(routeListToSend.get(i).getIsDeletedButUsedInPost())
+        			 routeListToSend.remove(i);
+        	 }
+        	 
     		String routeListInJson = gson.toJson(routeListToSend);
     		PrintWriter out = response.getWriter();
     		response.setContentType("application/json");
@@ -105,12 +114,35 @@ public class RouteServlet extends HttpServlet {
     	{
         	// get the route id from the request
         	long routeID = Long.parseLong(request.getParameter("m_routeID"));
+        	Boolean shouldDelete = true;
         	
         	Route routeToDelete = em.find(Route.class, routeID);
+        	long userID = routeToDelete.getUserID();
+        	
+        	// read the posts from the DB  
+        	TypedQuery<Post> query = em.createQuery(
+                    "SELECT p FROM Post p WHERE p.m_userID = :userID", Post.class).setParameter("userID", userID);
+        	 List<Post> userPostList = query.getResultList();
+        	 
+        	 // if we find post that uses this route, we shall not delete it from the DB
+        	 for(int i=0; i<userPostList.size(); i++)
+        	 {
+        		 if(userPostList.get(i).getPostRoute() == routeID)
+        		 {
+        			 shouldDelete = false;	 
+        			 em.getTransaction().begin();
+        			 routeToDelete.setIsDeletedButUsedInPost(true);
+               	  	 em.getTransaction().commit();	
+        			 break;
+        		 }
+        	 }
 
-        	  em.getTransaction().begin();
-        	  em.remove(routeToDelete);
-        	  em.getTransaction().commit();
+        	 if(shouldDelete)
+        	 {
+        		 em.getTransaction().begin();
+           	  	 em.remove(routeToDelete);
+           	  	 em.getTransaction().commit();	 
+        	 }
     	}
     	catch(Exception e)
     	{

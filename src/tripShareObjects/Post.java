@@ -15,9 +15,13 @@ public class Post implements Serializable{
 	private static final long serialVersionUID = 1L;
 	@Id @GeneratedValue
 	private long m_ID;
-	private int m_userID;
+	private long m_userID;
+	private String m_userFirstName;
+	private String m_userLastName;
+	private String m_postThumbnailString; 
 	private String m_title;
 	private String m_description;
+	private Boolean m_isPrivatePost;
 	@OneToOne
 	private long m_routeID;
     private ArrayList<Long> m_usersWhichLikedID;
@@ -37,8 +41,8 @@ public class Post implements Serializable{
 
     public long getID() { return m_ID; }
 
-    public int getUserID() { return m_userID; }
-    public void setUserID(int i_userID) { m_userID = i_userID; }
+    public long getUserID() { return m_userID; }
+    public void setUserID(long i_userID) { m_userID = i_userID; }
 
     public String getTitle() { return m_title; }
     public void setTitle(String i_title) { m_title = new String(i_title); }
@@ -92,4 +96,43 @@ public class Post implements Serializable{
 	}
 	
 	public ArrayList<String> getRelatedTags() { return m_relatedTags; }
+	
+	public String getUserFirstName()
+	{
+		return m_userFirstName;
+	}
+	
+	public String getUserLastName()
+	{
+		return m_userLastName;
+	}
+	
+	public void setUserFirstName(String i_userFirstName)
+	{
+		m_userFirstName = i_userFirstName;
+	}
+	
+	public void setUserLastName(String i_userLastName)
+	{
+		m_userLastName = i_userLastName;
+	}
+	
+	public void setThumbnailString(String i_thumbnailString)
+	{
+		m_postThumbnailString = i_thumbnailString;
+	}
+	
+	public String getThumbnailString()
+	{
+		return m_postThumbnailString;
+	}
+	
+    public void setTags(ArrayList<String> i_relatedTags)
+    {
+        m_relatedTags = i_relatedTags;
+    }
+    
+    public Boolean getIsPrivatePost() {return m_isPrivatePost; }
+    
+    public void setIsPrivatePost(Boolean i_isPrivatePost) { m_isPrivatePost = i_isPrivatePost; }
 }

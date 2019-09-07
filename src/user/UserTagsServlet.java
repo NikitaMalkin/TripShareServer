@@ -1,6 +1,5 @@
 package user;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -12,10 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import tripShareObjects.User;
 
@@ -39,13 +38,14 @@ public class UserTagsServlet extends HttpServlet {
 			// get the user id from the request
 			Long userID = Long.parseLong(request.getParameter("m_userID"));
 			// read the object from the request
-			BufferedReader reader = request.getReader();
-			String body = reader.toString();
-
-			JSONArray jsonArr = new JSONArray(body);
-			for (int i = 0; i < jsonArr.length(); i++) {
-				JSONObject jsonObj = jsonArr.getJSONObject(i);
-				String preferredTag = new Gson().fromJson(jsonObj.toString(), String.class);
+			String preferredTagsString = request.getParameter("m_userPreferredTags");
+			
+			JsonParser jsonParser = new JsonParser();
+			JsonArray jsonArr = (JsonArray)jsonParser.parse(preferredTagsString).getAsJsonArray();
+			
+			for (int i = 0; i < jsonArr.size(); i++) {
+				JsonElement jsonElement = jsonArr.get(i);
+				String preferredTag = new Gson().fromJson(jsonElement.toString(), String.class);
 				userPreferredTags.add(preferredTag);
 			}
 

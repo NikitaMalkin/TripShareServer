@@ -22,6 +22,7 @@ public class UploadProfileImageServlet extends HttpServlet {
        
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
+		Gson gson = new Gson();
 		// Obtain a database connection:
         EntityManagerFactory emf =
            (EntityManagerFactory)getServletContext().getAttribute("emf");
@@ -31,8 +32,10 @@ public class UploadProfileImageServlet extends HttpServlet {
     	{
 			// read the object from the request
     		BufferedReader reader = request.getReader();
-    		Long userID = new Gson().fromJson(reader, Long.class);
-    		String imageString = String.valueOf(request.getParameter("m_imageString"));
+    		User userToUpdate = gson.fromJson(reader, User.class);
+    		
+    		Long userID = userToUpdate.getID();
+    		String imageString = userToUpdate.getImageString();
     		
     		em.getTransaction().begin();
     		User userToAddImageTo = em.find( User.class,userID);

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 
 import tripShareObjects.User;
 
@@ -30,6 +31,7 @@ public class UserInfoValidation extends HttpServlet
         
 		String userName;
 		String password; 
+		String userToReturnInJson = "";
 		User user = null;
 		boolean isValid = false;
 		PrintWriter writer = response.getWriter();
@@ -43,15 +45,22 @@ public class UserInfoValidation extends HttpServlet
 		{	  
 			Query query = em.createQuery("SELECT p FROM User p WHERE p.m_userName =:userName", User.class).setParameter("userName", userName);
 			user = (User)query.getSingleResult();
-			if(password.equals(user.getPassword()))
+			if(password.equals(user.getPassword())) 
+			{
 				isValid = true;
+				userToReturnInJson = gson.toJson(user);
+			}	
 		}
 		catch (NoResultException e) 
 		{
 			isValid = false;
 		}
 		
-		writer.print(isValid);
+		JsonArray jsonArray = new JsonArray();
+		jsonArray.add(userToReturnInJson);
+		jsonArray.add(gson.toJson(isValid));
+
+		writer.print(jsonArray);
 		writer.flush();
 	}
 }

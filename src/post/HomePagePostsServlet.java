@@ -48,8 +48,15 @@ public class HomePagePostsServlet extends HttpServlet {
        		relatedTags = post.getRelatedTags();
 			for(String tag : preferredTag)
 			{
-				if(relatedTags.contains(tag))
-					m_postsToSend.add(post);
+				if(relatedTags != null)
+				{
+					if(relatedTags.contains(tag))
+					{
+						if(m_postsToSend != null && m_postsToSend.contains(post))
+							continue;
+						m_postsToSend.add(post);
+					}
+				}
 			}
        	 }
        	 
